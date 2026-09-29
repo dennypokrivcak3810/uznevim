@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS Sports Dashboard</title>
+<style>
+:root{--bg:#080a10;--panel:#10131c;--panel2:#151925;--text:#f4f6fb;--muted:#8e96a8;--accent:#6c63ff;--green:#35d07f;--red:#ff5d73;--line:#242938}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}.light{--bg:#f4f6fa;--panel:#fff;--panel2:#eef1f7;--text:#111522;--muted:#697184;--line:#dfe3eb}
+button,input{font:inherit}button{cursor:pointer;border:0}.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.sidebar{background:var(--panel);border-right:1px solid var(--line);padding:24px 16px;position:fixed;width:240px;height:100vh}
+.logo{font-size:24px;font-weight:900;margin:0 10px 35px}.logo span{color:var(--accent)}.nav{display:grid;gap:7px}.nav button{background:transparent;color:var(--muted);padding:13px 14px;border-radius:10px;text-align:left}.nav button:hover,.nav button.active{background:var(--panel2);color:var(--text)}.nav small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;margin:25px 14px 7px}
+.main{grid-column:2}.topbar{height:72px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;background:var(--panel)}.search{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:11px 14px;color:var(--text);width:min(360px,45vw);outline:none}.top-actions{display:flex;gap:9px}.iconbtn{background:var(--panel2);color:var(--text);width:40px;height:40px;border-radius:10px}
+.content{padding:30px;max-width:1500px;margin:auto}.hero{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:25px}.hero h1{font-size:32px}.hero p{color:var(--muted);margin-top:5px}.live{display:flex;align-items:center;gap:8px;background:rgba(53,208,127,.1);color:var(--green);padding:9px 13px;border-radius:30px;font-size:13px}.dot{width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 12px var(--green)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px}.stat-label{color:var(--muted);font-size:13px}.stat-value{font-size:28px;font-weight:800;margin:7px 0}.positive{color:var(--green)}.negative{color:var(--red)}.section{margin-top:25px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.section-head h2{font-size:20px}.filter{background:var(--panel2);color:var(--text);border:1px solid var(--line);padding:8px 12px;border-radius:8px}
+.main-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}.chart-card{height:340px}.chart{height:260px;display:flex;align-items:end;gap:10px;padding:25px 5px 5px}.bar{flex:1;background:linear-gradient(180deg,var(--accent),#3631a8);border-radius:7px 7px 2px 2px;min-height:12px;transition:.3s}.bar:hover{filter:brightness(1.3);transform:translateY(-4px)}.chart-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
+.matches{display:grid;gap:10px}.match{display:flex;align-items:center;justify-content:space-between;background:var(--panel2);padding:13px;border-radius:10px}.team{display:flex;align-items:center;gap:9px;font-size:13px}.badge{width:28px;height:28px;border-radius:8px;background:var(--accent);display:grid;place-items:center;font-size:12px;font-weight:bold}.score{font-weight:800}
+.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;padding:14px;border-bottom:1px solid var(--line);font-size:13px}.table th{color:var(--muted);font-weight:500}.player{display:flex;align-items:center;gap:10px}.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#a78bfa);display:grid;place-items:center;font-size:12px;font-weight:bold}.fav{background:transparent;color:#70798b;font-size:18px}.fav.on{color:#ffcb45}.rank{color:var(--muted)}
+.notice{padding:15px;border-radius:11px;background:linear-gradient(90deg,rgba(108,99,255,.16),rgba(108,99,255,.04));border:1px solid rgba(108,99,255,.3);margin-top:16px}.notice strong{display:block;margin-bottom:3px}.notice span{color:var(--muted);font-size:13px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:200;align-items:center;justify-content:center;padding:20px}.modal.open{display:flex}.modal-box{background:var(--panel);border:1px solid var(--line);border-radius:18px;width:min(500px,100%);padding:25px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.close{background:var(--panel2);color:var(--text);width:35px;height:35px;border-radius:8px}.profile{display:grid;grid-template-columns:70px 1fr;gap:16px;align-items:center}.bigavatar{width:70px;height:70px;border-radius:20px;background:linear-gradient(135deg,var(--accent),#a78bfa);display:grid;place-items:center;font-size:22px;font-weight:bold}
+.toast{position:fixed;right:20px;bottom:20px;background:var(--panel);border:1px solid var(--line);padding:14px 18px;border-radius:10px;transform:translateY(100px);opacity:0;transition:.3s;z-index:300}.toast.show{transform:translateY(0);opacity:1}
+@media(max-width:1050px){.grid{grid-template-columns:repeat(2,1fr)}.main-grid{grid-template-columns:1fr}.sidebar{width:200px}.app{grid-template-columns:200px 1fr}}
+@media(max-width:700px){.app{display:block}.sidebar{position:static;width:100%;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:15px}.logo{margin:0 0 12px}.nav{display:flex;overflow:auto}.nav small{display:none}.nav button{white-space:nowrap}.main{width:100%}.topbar{padding:12px;height:auto;gap:10px}.search{width:100%}.content{padding:18px}.hero{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr 1fr}.grid .card{padding:15px}.stat-value{font-size:22px}}
+@media(max-width:430px){.grid{grid-template-columns:1fr}.top-actions{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="logo">NE<span>XUS</span></div>
+  <div class="nav">
+    <small>Menu</small>
+    <button class="active" onclick="goHome()">🏠 Dashboard</button>
+    <button onclick="showToast('Zápasy načteny')">🏟️ Zápasy</button>
+    <button onclick="showToast('Žebříčky otevřeny')">🏆 Žebříčky</button>
+    <button onclick="showToast('Týmy otevřeny')">🛡️ Týmy</button>
+    <small>Nástroje</small>
+    <button onclick="showToast('Oblíbené hráče najdeš ve statistikách ⭐')">⭐ Oblíbené</button>
+    <button onclick="showToast('Nastavení je pouze demo')">⚙️ Nastavení</button>
+  </div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <input id="search" class="search" placeholder="🔎 Hledat hráče..." oninput="filterPlayers()">
+  <div class="top-actions">
+    <button class="iconbtn" onclick="toggleTheme()" title="Motiv">☀️</button>
+    <button class="iconbtn" onclick="showToast('Nemáš žádná nová upozornění 🔔')">🔔</button>
+  </div>
+</header>
+
+<div class="content">
+  <div class="hero">
+    <div><h1>Sports Overview</h1><p>Přehled sportovních statistik a výsledků.</p></div>
+    <div class="live"><span class="dot"></span> Systém online</div>
+  </div>
+
+  <div class="grid">
+    <div class="card"><div class="stat-label">Sledované zápasy</div><div class="stat-value">24</div><span class="positive">+6 tento týden</span></div>
+    <div class="card"><div class="stat-label">Aktivní hráči</div><div class="stat-value">1,284</div><span class="positive">+8.4%</span></div>
+    <div class="card"><div class="stat-label">Góly tento týden</div><div class="stat-value">347</div><span class="positive">+12.1%</span></div>
+    <div class="card"><div class="stat-label">Upozornění</div><div class="stat-value">7</div><span class="negative">3 důležitá</span></div>
+  </div>
+
+  <div class="main-grid section">
+    <div class="card chart-card">
+      <div class="section-head"><h2>Výkonnost týmu</h2><select class="filter" onchange="changeChart(this.value)"><option value="1">Posledních 7 dní</option><option value="2">Posledních 7 zápasů</option></select></div>
+      <div id="chart" class="chart"></div>
+      <div class="chart-labels"><span>Po</span><span>Út</span><span>St</span><span>Čt</span><span>Pá</span><span>So</span><span>Ne</span></div>
+    </div>
+    <div class="card">
+      <div class="section-head"><h2>Nejbližší zápasy</h2><button class="filter" onclick="showToast('Načítám další zápasy...')">Vše</button></div>
+      <div class="matches">
+        <div class="match"><div class="team"><div class="badge">FC</div>Falcons</div><div>18:30</div><div class="team">Wolves<div class="badge">WO</div></div></div>
+        <div class="match"><div class="team"><div class="badge">ST</div>Storm</div><div>20:00</div><div class="team">Raptors<div class="badge">RA</div></div></div>
+        <div class="match"><div class="team"><div class="badge">KN</div>Kings</div><div>21:15</div><div class="team">Titans<div class="badge">TI</div></div></div>
+        <div class="notice"><strong>🔥 Zápas kola</strong><span>Falcons vs Wolves • Dnes 18:30</span></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="section-head"><h2>Top hráči</h2><select id="sort" class="filter" onchange="sortPlayers(this.value)"><option value="points">Body</option><option value="goals">Góly</option><option value="assists">Asistence</option></select></div>
+    <div class="card table-wrap">
+      <table class="table">
+        <thead><tr><th>#</th><th>Hráč</th><th>Tým</th><th>Góly</th><th>Asistence</th><th>Body</th><th></th></tr></thead>
+        <tbody id="players"></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+</main>
+</div>
+
+<div id="modal" class="modal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="modal-head"><h2 id="modalTitle">Profil hráče</h2><button class="close" onclick="closeModal()">✕</button></div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const players=[
+{name:"Adam Novak",team:"Falcons",goals:18,assists:14,points:32,fav:false},
+{name:"David Kral",team:"Wolves",goals:15,assists:16,points:31,fav:false},
+{name:"Martin Dvorak",team:"Storm",goals:12,assists:17,points:29,fav:false},
+{name:"Jakub Vesely",team:"Raptors",goals:14,assists:11,points:25,fav:false},
+{name:"Tomas Urban",team:"Kings",goals:10,assists:13,points:23,fav:false},
+{name:"Filip Marek",team:"Titans",goals:9,assists:12,points:21,fav:false}
+];
+
+function initials(n){return n.split(" ").map(x=>x[0]).join("")}
+function renderPlayers(list=players){
+ const body=document.getElementById("players");
+ body.innerHTML=list.map((p,i)=>`<tr onclick="openPlayer('${p.name}')">
+ <td class="rank">${i+1}</td><td><div class="player"><div class="avatar">${initials(p.name)}</div>${p.name}</div></td>
+ <td>${p.team}</td><td>${p.goals}</td><td>${p.assists}</td><td><b>${p.points}</b></td>
+ <td><button class="fav ${p.fav?'on':''}" onclick="toggleFav(event,'${p.name}')">★</button></td></tr>`).join("");
+}
+function filterPlayers(){
+ const q=document.getElementById("search").value.toLowerCase();
+ renderPlayers(players.filter(p=>(p.name+" "+p.team).toLowerCase().includes(q)));
+}
+function sortPlayers(type){
+ players.sort((a,b)=>b[type]-a[type]); filterPlayers();
+}
+function toggleFav(e,name){
+ e.stopPropagation();const p=players.find(x=>x.name===name);p.fav=!p.fav;filterPlayers();showToast(p.fav?"Přidáno do oblíbených ⭐":"Odebráno z oblíbených");
+ localStorage.setItem("nexusFav",JSON.stringify(players.filter(x=>x.fav).map(x=>x.name)));
+}
+function openPlayer(name){
+ const p=players.find(x=>x.name===name);
+ document.getElementById("modalTitle").textContent=p.name;
+ document.getElementById("modalContent").innerHTML=`<div class="profile"><div class="bigavatar">${initials(p.name)}</div><div><h3>${p.team}</h3><span style="color:var(--muted)">Profil hráče</span></div></div>
+ <div class="grid" style="margin-top:25px;grid-template-columns:repeat(3,1fr)">
+ <div class="card"><div class="stat-label">Góly</div><div class="stat-value">${p.goals}</div></div>
+ <div class="card"><div class="stat-label">Asistence</div><div class="stat-value">${p.assists}</div></div>
+ <div class="card"><div class="stat-label">Body</div><div class="stat-value">${p.points}</div></div></div>`;
+ document.getElementById("modal").classList.add("open");
+}
+function closeModal(e){if(!e||e.target.id==="modal"||e.target.className==="close")document.getElementById("modal").classList.remove("open")}
+function toggleTheme(){document.body.classList.toggle("light");localStorage.setItem("nexusTheme",document.body.classList.contains("light")?"light":"dark")}
+function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.tt);window.tt=setTimeout(()=>t.classList.remove("show"),2300)}
+function changeChart(v){drawChart(v==="1"?[45,62,51,78,69,88,94]:[60,82,72,91,64,97,84]);showToast("Graf aktualizován")}
+function drawChart(vals){document.getElementById("chart").innerHTML=vals.map(v=>`<div class="bar" style="height:${v}%"></div>`).join("")}
+function goHome(){window.scrollTo({top:0,behavior:"smooth"})}
+
+const favs=JSON.parse(localStorage.getItem("nexusFav")||"[]");
+players.forEach(p=>p.fav=favs.includes(p.name));
+if(localStorage.getItem("nexusTheme")==="light")document.body.classList.add("light");
+renderPlayers();drawChart([45,62,51,78,69,88,94]);
+</script>
+</body>
+</html>
